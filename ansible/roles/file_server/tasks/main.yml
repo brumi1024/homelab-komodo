@@ -3,6 +3,11 @@
   ansible.builtin.include_tasks: packages.yml
   tags: file_server
 
+
+- name: Include timezone tasks
+  ansible.builtin.include_tasks: timezone.yml
+  when: file_server_timezone | length > 0
+  tags: file_server
 - name: Include file server user tasks
   ansible.builtin.include_tasks: users.yml
   tags: file_server

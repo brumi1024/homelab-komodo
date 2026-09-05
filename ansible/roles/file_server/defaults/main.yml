@@ -1,4 +1,8 @@
 ---
+# Timers render their OnCalendar in local time, so an unset timezone silently
+# shifts every rsync job by the UTC offset.
+file_server_timezone: ""
+
 # Samba
 file_server_smb_workgroup: "WORKGROUP"
 file_server_smb_server_string: "%h file server"

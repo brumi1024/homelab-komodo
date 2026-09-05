@@ -4,6 +4,7 @@
     name:
       - samba
       - samba-vfs-modules
+      - smbclient
       - avahi-daemon
       - rsync
       - curl

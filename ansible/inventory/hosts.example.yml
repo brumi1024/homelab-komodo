@@ -107,3 +107,4 @@ all:
         files:
           ansible_host: "files"
           node_site: main
+          file_server_timezone: "Etc/UTC"

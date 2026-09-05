@@ -29,9 +29,20 @@
     group: "{{ item.group | default(omit) }}"
     groups: "{{ item.groups | default([]) }}"
     append: true
-    shell: /usr/sbin/nologin
-    create_home: false
+    shell: "{{ '/bin/bash' if item.cockpit_admin | default(false) else '/usr/sbin/nologin' }}"
+    create_home: "{{ item.cockpit_admin | default(false) }}"
   loop: "{{ file_server_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+# Cockpit refuses root, so administering it needs a normal account that can
+# log in and escalate.
+- name: Grant sudo to Cockpit administrators
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    groups: sudo
+    append: true
+  loop: "{{ file_server_users | selectattr('cockpit_admin', 'defined') | selectattr('cockpit_admin') | list }}"
   loop_control:
     label: "{{ item.name }}"
 
@@ -76,3 +87,12 @@
     or file_server_force_password_reset | bool
   no_log: true
   changed_when: true
+
+- name: Set the Unix password for Cockpit administrators
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    password: "{{ file_server_smb_passwords[item.name] | password_hash('sha512', 65534 | random(seed=item.name) | string) }}"
+  loop: "{{ file_server_users | selectattr('cockpit_admin', 'defined') | selectattr('cockpit_admin') | list }}"
+  loop_control:
+    label: "{{ item.name }}"
+  no_log: true

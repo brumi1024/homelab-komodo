@@ -15,7 +15,8 @@ file_server_shares: []
 file_server_groups: []
 # Unix and Samba accounts. {name, uid, group (primary, must be in
 # file_server_groups), groups (secondary, created if not already declared),
-# op_item (defaults to name)}
+# op_item (defaults to name), cockpit_admin (login shell, home, sudo, and the
+# same 1Password password set as the Unix password)}
 file_server_users: []
 # Set true to force smbpasswd to re-run for every user on the next apply.
 file_server_force_password_reset: false
